@@ -6,17 +6,23 @@ namespace Gestion_alumnos
         public AppShell(
             MainPage estudiantesPage,
             CalendarioPage calendarioPage,
+            TrabajosPage trabajosPage,
             AsistenciaPage asistenciaPage,
             EntregaPage entregaPage,
-            PanelPage panelPage)
+            PanelPage panelPage,
+            AdministracionPage administracionPage)
         {
             InitializeComponent();
 
+
+            Routing.RegisterRoute("HistorialEstudiante",typeof(HistorialEstudiantePage));
             EstudiantesTab.Content = estudiantesPage;
             CalendarioTab.Content = calendarioPage;
+            TrabajosTab.Content = trabajosPage;
             AsistenciaTab.Content = asistenciaPage;
             EntregasTab.Content = entregaPage;
             PanelTab.Content = panelPage;
+            AdministracionTab.Content = administracionPage;
         }
     }
 }

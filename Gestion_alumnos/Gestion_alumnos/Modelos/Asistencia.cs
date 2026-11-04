@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using SQLite;
 
 namespace Gestion_alumnos.Modelos
 {
     public class Asistencia
     {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+
         public int LegajoEstudiante { get; set; }
 
         public DateTime FechaClase { get; set; }

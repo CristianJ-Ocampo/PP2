@@ -23,6 +23,7 @@ namespace Gestion_alumnos
 #endif
 
             // Servicio de datos compartidos
+            builder.Services.AddSingleton<BaseDatosService>();
             builder.Services.AddSingleton<DatosService>();
             builder.Services.AddSingleton<RiesgoService>();
 
@@ -40,6 +41,8 @@ namespace Gestion_alumnos
             builder.Services.AddTransient<EntregaViewModel>();
             builder.Services.AddTransient<PanelPage>();
             builder.Services.AddTransient<PanelViewModel>();
+            builder.Services.AddTransient<AdministracionPage>();
+            builder.Services.AddTransient<TrabajosPage>();
             return builder.Build();
         }
     }

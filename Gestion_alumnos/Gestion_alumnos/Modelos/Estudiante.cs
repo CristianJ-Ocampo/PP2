@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using SQLite;
 
 namespace Gestion_alumnos.Modelos
 {
     public class Estudiante
     {
-        public string Apellido { get; set; }
-        public string Nombre { get; set; }
+        [PrimaryKey]
         public int Legajo { get; set; }
-        public string Comision { get; set; }
+
+        public string Apellido { get; set; } = string.Empty;
+
+        public string Nombre { get; set; } = string.Empty;
+
+        public string Comision { get; set; } = string.Empty;
     }
 }

@@ -150,35 +150,53 @@ namespace Gestion_alumnos.ViewModels
             if (TrabajoSeleccionado == null || !PuedeGuardar)
                 return;
 
-            foreach (var estudiante in EstudiantesEntrega)
+            PuedeGuardar = false;
+
+            try
             {
-                var entregaExistente = datosService.Entregas.FirstOrDefault(e =>
-                    e.LegajoEstudiante == estudiante.Legajo &&
-                    e.Comision == TrabajoSeleccionado.Comision &&
-                    e.NombreTrabajo == TrabajoSeleccionado.Nombre);
+                foreach (var estudiante in EstudiantesEntrega)
+                {
+                    var entregaExistente = datosService.Entregas.FirstOrDefault(e =>
+                        e.LegajoEstudiante == estudiante.Legajo &&
+                        e.Comision == TrabajoSeleccionado.Comision &&
+                        e.NombreTrabajo == TrabajoSeleccionado.Nombre);
 
-                if (entregaExistente != null)
-                {
-                    entregaExistente.Entregado = estudiante.Entregado;
-                }
-                else
-                {
-                    datosService.Entregas.Add(new Entrega
+                    if (entregaExistente != null)
                     {
-                        LegajoEstudiante = estudiante.Legajo,
-                        NombreTrabajo = TrabajoSeleccionado.Nombre,
-                        Comision = TrabajoSeleccionado.Comision,
-                        Entregado = estudiante.Entregado
-                    });
+                        // ACTUALIZAR ENTREGA EXISTENTE
+                        entregaExistente.Entregado = estudiante.Entregado;
+
+                        await datosService.GuardarEntregaAsync(entregaExistente);
+                    }
+                    else
+                    {
+                        // CREAR NUEVA ENTREGA
+                        var nuevaEntrega = new Entrega
+                        {
+                            LegajoEstudiante = estudiante.Legajo,
+                            NombreTrabajo = TrabajoSeleccionado.Nombre,
+                            Comision = TrabajoSeleccionado.Comision,
+                            Entregado = estudiante.Entregado
+                        };
+
+                        await datosService.GuardarEntregaAsync(nuevaEntrega);
+                    }
                 }
+
+                MensajeEstado = "Entregas guardadas correctamente.";
+
+                await Shell.Current.DisplayAlertAsync("Registro de entregas","Las entregas se guardaron correctamente.","Aceptar");
             }
+            catch (Exception ex)
+            {
+                MensajeEstado = "Error al guardar las entregas.";
 
-            MensajeEstado = "Entregas guardadas correctamente.";
-
-            await Shell.Current.DisplayAlertAsync(
-                "Registro de entregas",
-                "Las entregas se guardaron correctamente.",
-                "Aceptar");
+                await Shell.Current.DisplayAlertAsync("Error",$"No se pudieron guardar las entregas: {ex.Message}","Aceptar");
+            }
+            finally
+            {
+                PuedeGuardar = EstudiantesEntrega.Count > 0;
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

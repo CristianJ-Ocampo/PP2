@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Gestion_alumnos.AdministracionPage"
+    Title="Administración">
+
+    <ScrollView>
+
+        <VerticalStackLayout
+            Padding="20"
+            Spacing="20">
+
+            <Label
+                Text="Administración del sistema"
+                FontSize="24"
+                FontAttributes="Bold" />
+
+            <Label
+                Text="Desde esta sección podés administrar la configuración y los datos de la aplicación."
+                FontSize="14"
+                TextColor="Gray" />
+
+            <!-- CONFIGURACIÓN DE RIESGO -->
+            <Border
+                Stroke="#CCCCCC"
+                StrokeThickness="1"
+                Padding="15">
+
+                <VerticalStackLayout Spacing="15">
+
+                    <Label
+                        Text="Configuración de riesgo académico"
+                        FontSize="18"
+                        FontAttributes="Bold" />
+
+                    <Label
+                        Text="Definí los porcentajes a partir de los cuales un estudiante tendrá riesgo medio o alto."
+                        FontSize="14" />
+
+                    <Label
+                        Text="Umbral de riesgo medio (%)" />
+
+                    <Entry
+                        x:Name="UmbralMedioEntry"
+                        Placeholder="Ejemplo: 20"
+                        Keyboard="Numeric" />
+
+                    <Label
+                        Text="Umbral de riesgo alto (%)" />
+
+                    <Entry
+                        x:Name="UmbralAltoEntry"
+                        Placeholder="Ejemplo: 40"
+                        Keyboard="Numeric" />
+
+                    <Button
+                        Text="Guardar configuración"
+                        Clicked="GuardarConfiguracion_Clicked" />
+
+                </VerticalStackLayout>
+
+            </Border>
+
+            <!-- LIMPIEZA DE DATOS -->
+            <Border
+                Stroke="#CCCCCC"
+                StrokeThickness="1"
+                Padding="15">
+
+                <VerticalStackLayout Spacing="15">
+
+                    <Label
+                        Text="Limpiar datos de prueba"
+                        FontSize="18"
+                        FontAttributes="Bold" />
+
+                    <Label
+                        Text="Elimina todos los estudiantes, clases, trabajos prácticos, asistencias y entregas registrados."
+                        FontSize="14" />
+
+                    <Button
+                        Text="Eliminar todos los datos"
+                        BackgroundColor="#C62828"
+                        TextColor="White"
+                        Clicked="LimpiarDatos_Clicked" />
+
+                </VerticalStackLayout>
+
+            </Border>
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+
+</ContentPage>

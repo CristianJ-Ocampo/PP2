@@ -98,6 +98,12 @@ namespace Gestion_alumnos.ViewModels
 
             GuardarAsistenciaCommand =
                 new Command(async () => await GuardarAsistenciaAsync());
+
+            // ACTUALIZAR LAS CLASES SI SE CARGAN DESDE SQLITE
+            datosService.Clases.CollectionChanged += (sender, args) =>
+            {
+                ActualizarClases();
+            };
         }
 
         // CAMBIAR COMISIÓN
@@ -178,7 +184,7 @@ namespace Gestion_alumnos.ViewModels
             PuedeGuardar = estudiantes.Count > 0;
         }
 
-        // GUARDAR ASISTENCIA
+        // GUARDAR O CORREGIR ASISTENCIA EN SQLITE
         private async Task GuardarAsistenciaAsync()
         {
             if (ClaseSeleccionada == null)
@@ -189,35 +195,63 @@ namespace Gestion_alumnos.ViewModels
                 return;
             }
 
-            foreach (EstudianteAsistencia estudiante in EstudiantesAsistencia)
+            // EVITAR QUE SE GUARDE DOS VECES AL MISMO TIEMPO
+            if (!PuedeGuardar)
             {
-                Asistencia? asistenciaExistente =
-                    datosService.Asistencias.FirstOrDefault(a =>
-                        a.LegajoEstudiante == estudiante.Legajo &&
-                        a.Comision == ClaseSeleccionada.Comision &&
-                        a.FechaClase.Date == ClaseSeleccionada.Fecha.Date);
-
-                if (asistenciaExistente != null)
-                {
-                    asistenciaExistente.Presente = estudiante.Presente;
-                }
-                else
-                {
-                    Asistencia nuevaAsistencia = new Asistencia
-                    {
-                        LegajoEstudiante = estudiante.Legajo,
-                        FechaClase = ClaseSeleccionada.Fecha,
-                        Comision = ClaseSeleccionada.Comision,
-                        Presente = estudiante.Presente
-                    };
-
-                    datosService.Asistencias.Add(nuevaAsistencia);
-                }
+                return;
             }
 
-            await MostrarMensaje(
-                "Asistencia registrada",
-                "Los datos se guardaron correctamente.");
+            PuedeGuardar = false;
+
+            try
+            {
+                foreach (EstudianteAsistencia estudiante in EstudiantesAsistencia)
+                {
+                    Asistencia? asistenciaExistente =
+                        datosService.Asistencias.FirstOrDefault(a =>
+                            a.LegajoEstudiante == estudiante.Legajo &&
+                            a.Comision == ClaseSeleccionada.Comision &&
+                            a.FechaClase.Date == ClaseSeleccionada.Fecha.Date);
+
+                    if (asistenciaExistente != null)
+                    {
+                        // CORREGIR REGISTRO EXISTENTE
+                        asistenciaExistente.Presente = estudiante.Presente;
+
+                        await datosService.GuardarAsistenciaAsync(
+                            asistenciaExistente);
+                    }
+                    else
+                    {
+                        // CREAR NUEVO REGISTRO
+                        Asistencia nuevaAsistencia = new Asistencia
+                        {
+                            LegajoEstudiante = estudiante.Legajo,
+                            FechaClase = ClaseSeleccionada.Fecha,
+                            Comision = ClaseSeleccionada.Comision,
+                            Presente = estudiante.Presente
+                        };
+
+                        await datosService.GuardarAsistenciaAsync(
+                            nuevaAsistencia);
+                    }
+                }
+
+                await MostrarMensaje(
+                    "Asistencia registrada",
+                    "Los datos se guardaron correctamente en SQLite.");
+            }
+            catch (Exception ex)
+            {
+                await MostrarMensaje(
+                    "Error de SQLite",
+                    $"No se pudieron guardar las asistencias: {ex.Message}");
+            }
+            finally
+            {
+                PuedeGuardar = ClaseSeleccionada != null &&
+                              EstudiantesAsistencia.Count > 0;
+            }
         }
 
         // MOSTRAR MENSAJES

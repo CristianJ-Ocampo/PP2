@@ -66,6 +66,32 @@
                             <Label
                                 Text="{Binding PorcentajeNoEntregas,
                                 StringFormat='Trabajos no entregados: {0:F1}%'}" />
+                            
+                            <!-- INFORMACIÓN DE CONTACTO -->
+                            <BoxView
+                             HeightRequest="1"
+                             Color="#DDDDDD"
+                             Margin="0,10,0,5" />
+
+                            <Label
+                                Text="{Binding EstadoContacto}"
+                                FontAttributes="Bold"
+                                FontSize="15" />
+
+                            <Label
+                                Text="{Binding UltimoContacto}"
+                                FontSize="14" />
+
+                            <Label
+                                Text="{Binding CantidadIntervenciones}"
+                                FontSize="14"
+                                TextColor="Gray" />
+                            
+                            <Button
+                                Text="VER HISTORIAL"
+                                Margin="0,10,0,0"
+                                Clicked="VerHistorial_Clicked"
+                                CommandParameter="{Binding Legajo}" />
 
                         </VerticalStackLayout>
                     </Border>

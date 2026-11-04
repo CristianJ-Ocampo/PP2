@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 
 <Shell
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -19,6 +19,11 @@
             Route="Calendario" />
 
         <ShellContent
+            x:Name="TrabajosTab"
+            Title="Trabajos prácticos"
+            Route="TrabajosPage" />
+
+        <ShellContent
             x:Name="AsistenciaTab"
             Title="Asistencia"
             Route="Asistencia" />
@@ -32,6 +37,11 @@
             x:Name="PanelTab"
             Title="Panel"
             Route="PanelPage" />
+
+        <ShellContent
+            x:Name="AdministracionTab"
+            Title="Administración"
+            Route="AdministracionPage" />
 
     </TabBar>
 

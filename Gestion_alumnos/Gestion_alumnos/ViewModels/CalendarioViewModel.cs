@@ -10,6 +10,8 @@ namespace Gestion_alumnos.ViewModels
 {
     public class CalendarioViewModel : INotifyPropertyChanged
     {
+        private readonly DatosService datosService;
+
         // COLECCIONES
         public ObservableCollection<Clase> Clases { get; }
         public ObservableCollection<TrabajoPractico> Trabajos { get; }
@@ -95,11 +97,11 @@ namespace Gestion_alumnos.ViewModels
             }
         }
 
-        // COMMANDS
+        // COMANDOS
         public ICommand AgregarClaseCommand { get; }
         public ICommand AgregarTrabajoCommand { get; }
 
-        // NOTIFICAR CAMBIOS
+        // NOTIFICACIÓN DE CAMBIOS
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private void OnPropertyChanged(
@@ -113,6 +115,8 @@ namespace Gestion_alumnos.ViewModels
         // CONSTRUCTOR
         public CalendarioViewModel(DatosService datosService)
         {
+            this.datosService = datosService;
+
             Clases = datosService.Clases;
             Trabajos = datosService.Trabajos;
 
@@ -124,6 +128,17 @@ namespace Gestion_alumnos.ViewModels
 
             AgregarTrabajoCommand =
                 new Command(async () => await AgregarTrabajoAsync());
+
+            // ACTUALIZAR LAS LISTAS CUANDO CAMBIAN LOS DATOS
+            Clases.CollectionChanged += (sender, args) =>
+            {
+                ActualizarCalendario();
+            };
+
+            Trabajos.CollectionChanged += (sender, args) =>
+            {
+                ActualizarCalendario();
+            };
         }
 
         // AGREGAR CLASE
@@ -131,8 +146,7 @@ namespace Gestion_alumnos.ViewModels
         {
             if (string.IsNullOrWhiteSpace(ComisionSeleccionada))
             {
-                await MostrarMensaje("Error",
-                    "Debe seleccionar una comisión.");
+                await MostrarMensaje("Error","Debe seleccionar una comisión.");
                 return;
             }
 
@@ -141,8 +155,7 @@ namespace Gestion_alumnos.ViewModels
                 if (clase.Fecha.Date == FechaClase.Date &&
                     clase.Comision == ComisionSeleccionada)
                 {
-                    await MostrarMensaje("Clase repetida",
-                        "Ya existe una clase en esa fecha para esta comisión.");
+                    await MostrarMensaje("Clase repetida","Ya existe una clase en esa fecha para esta comisión.");
                     return;
                 }
             }
@@ -153,11 +166,20 @@ namespace Gestion_alumnos.ViewModels
                 Comision = ComisionSeleccionada
             };
 
-            Clases.Add(nuevaClase);
+            // GUARDAR EN SQLITE
+            try
+            {
+                await datosService.GuardarClaseAsync(nuevaClase);
+            }
+            catch (Exception ex)
+            {
+                await MostrarMensaje("Error de SQLite",$"No se pudo guardar la clase: {ex.Message}");
+                return;
+            }
+
             ActualizarCalendario();
 
-            await MostrarMensaje("Clase registrada",
-                "La clase se agregó correctamente.");
+            await MostrarMensaje("Clase registrada","La clase se agregó correctamente.");
         }
 
         // AGREGAR TRABAJO PRÁCTICO
@@ -165,15 +187,13 @@ namespace Gestion_alumnos.ViewModels
         {
             if (string.IsNullOrWhiteSpace(ComisionSeleccionada))
             {
-                await MostrarMensaje("Error",
-                    "Debe seleccionar una comisión.");
+                await MostrarMensaje("Error","Debe seleccionar una comisión.");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(NombreTrabajo))
             {
-                await MostrarMensaje("Error",
-                    "Debe ingresar el nombre del trabajo práctico.");
+                await MostrarMensaje("Error","Debe ingresar el nombre del trabajo práctico.");
                 return;
             }
 
@@ -181,13 +201,9 @@ namespace Gestion_alumnos.ViewModels
 
             foreach (TrabajoPractico trabajo in Trabajos)
             {
-                if (trabajo.Nombre.Equals(
-                        nombre,
-                        StringComparison.OrdinalIgnoreCase) &&
-                    trabajo.Comision == ComisionSeleccionada)
+                if (trabajo.Nombre.Equals(nombre,StringComparison.OrdinalIgnoreCase) && trabajo.Comision == ComisionSeleccionada)
                 {
-                    await MostrarMensaje("Trabajo repetido",
-                        "Ya existe un trabajo con ese nombre en esta comisión.");
+                    await MostrarMensaje("Trabajo repetido","Ya existe un trabajo con ese nombre en esta comisión.");
                     return;
                 }
             }
@@ -199,13 +215,22 @@ namespace Gestion_alumnos.ViewModels
                 Comision = ComisionSeleccionada
             };
 
-            Trabajos.Add(nuevoTrabajo);
+            // GUARDAR EN SQLITE
+            try
+            {
+                await datosService.GuardarTrabajoAsync(nuevoTrabajo);
+            }
+            catch (Exception ex)
+            {
+                await MostrarMensaje("Error de SQLite",$"No se pudo guardar el trabajo: {ex.Message}");
+                return;
+            }
+
             ActualizarCalendario();
 
             NombreTrabajo = "";
 
-            await MostrarMensaje("Trabajo registrado",
-                "El trabajo práctico se agregó correctamente.");
+            await MostrarMensaje("Trabajo registrado","El trabajo práctico se agregó correctamente.");
         }
 
         // FILTRAR POR COMISIÓN
@@ -248,8 +273,7 @@ namespace Gestion_alumnos.ViewModels
         {
             if (Shell.Current != null)
             {
-                await Shell.Current.DisplayAlertAsync(
-                    titulo, mensaje, "OK");
+                await Shell.Current.DisplayAlertAsync(titulo, mensaje, "OK");
             }
         }
     }

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Gestion_alumnos.CalendarioPage"
+    Title="Calendario de clases">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label
+                Text="Calendario de clases"
+                FontSize="26"
+                FontAttributes="Bold" />
+
+            <Picker
+                x:Name="ComisionPicker"
+                Title="Seleccione una comisión"
+                SelectedItem="{Binding ComisionSeleccionada, Mode=TwoWay}">
+
+                <Picker.Items>
+                    <x:String>1°A</x:String>
+                    <x:String>1°B</x:String>
+                    <x:String>2°A</x:String>
+                </Picker.Items>
+
+            </Picker>
+
+            <Label
+                Text="Registrar nueva clase"
+                FontSize="20"
+                FontAttributes="Bold" />
+
+            <DatePicker
+                x:Name="FechaClasePicker"
+                Date="{Binding FechaClase, Mode=TwoWay}" />
+
+            <Button
+                Text="AGREGAR CLASE"
+                Command="{Binding AgregarClaseCommand}" />
+
+            <Label
+                Text="Clases programadas"
+                FontSize="20"
+                FontAttributes="Bold" />
+
+            <Label
+                x:Name="MensajeClasesVacias"
+                Text="No hay clases registradas en esta comisión."
+                IsVisible="{Binding MostrarClasesVacias}"
+                TextColor="Gray" />
+
+            <CollectionView
+                x:Name="ListaClases"
+                ItemsSource="{Binding ClasesVisibles}"
+                HeightRequest="300">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <VerticalStackLayout Padding="10">
+
+                            <Label
+                                Text="{Binding Fecha, StringFormat='Fecha: {0:dd/MM/yyyy}'}"
+                                FontAttributes="Bold" />
+
+                            <Label
+                                Text="{Binding Comision}" />
+
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

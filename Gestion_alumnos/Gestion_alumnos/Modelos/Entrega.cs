@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using SQLite;
 
 namespace Gestion_alumnos.Modelos
 {
     public class Entrega
     {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+
         public int LegajoEstudiante { get; set; }
 
         public string NombreTrabajo { get; set; } = string.Empty;

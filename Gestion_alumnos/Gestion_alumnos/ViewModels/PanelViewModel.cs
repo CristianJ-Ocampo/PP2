@@ -12,6 +12,8 @@ namespace Gestion_alumnos.ViewModels
     {
         private readonly RiesgoService riesgoService;
 
+        private readonly DatosService datosService;
+
         public ObservableCollection<RiesgoEstudiante> EstudiantesRiesgo
         { get; } = new();
 
@@ -45,9 +47,12 @@ namespace Gestion_alumnos.ViewModels
 
         public ICommand ActualizarPanelCommand { get; }
 
-        public PanelViewModel(RiesgoService riesgoService)
+        public PanelViewModel(
+    RiesgoService riesgoService,
+    DatosService datosService)
         {
             this.riesgoService = riesgoService;
+            this.datosService = datosService;
 
             ActualizarPanelCommand = new Command(ActualizarPanel);
         }
@@ -68,6 +73,39 @@ namespace Gestion_alumnos.ViewModels
 
             foreach (var resultado in resultados)
             {
+                // BUSCAR INTERVENCIONES DEL ESTUDIANTE
+                var intervenciones = datosService.Intervenciones
+                    .Where(i => i.LegajoEstudiante == resultado.Legajo)
+                    .OrderByDescending(i => i.Fecha)
+                    .ThenByDescending(i => i.Id)
+                    .ToList();
+
+                if (intervenciones.Count > 0)
+                {
+                    // EL ESTUDIANTE FUE CONTACTADO
+                    var ultima = intervenciones.First();
+
+                    resultado.FueContactado = true;
+                    resultado.EstadoContacto = "Contactado";
+
+                    resultado.UltimoContacto =
+                        $"Último contacto: {ultima.Fecha:dd/MM/yyyy}";
+
+                    resultado.CantidadIntervenciones =
+                        $"Intervenciones registradas: {intervenciones.Count}";
+                }
+                else
+                {
+                    // EL ESTUDIANTE NO TIENE INTERVENCIONES
+                    resultado.FueContactado = false;
+                    resultado.EstadoContacto =
+                        "Sin intervenciones registradas";
+
+                    resultado.UltimoContacto = "";
+
+                    resultado.CantidadIntervenciones = "";
+                }
+
                 EstudiantesRiesgo.Add(resultado);
             }
 

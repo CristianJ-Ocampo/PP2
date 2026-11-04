@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Gestion_alumnos.HistorialEstudiantePage"
+    Title="Historial del estudiante">
+
+    <ScrollView>
+
+        <VerticalStackLayout
+            Padding="20"
+            Spacing="15">
+
+            <Label
+                Text="Ficha del estudiante"
+                FontSize="26"
+                FontAttributes="Bold" />
+
+            <Border
+                Stroke="#CCCCCC"
+                StrokeThickness="1"
+                Padding="15">
+
+                <VerticalStackLayout Spacing="10">
+
+                    <Label
+                        Text="Datos personales"
+                        FontSize="20"
+                        FontAttributes="Bold" />
+
+                    <Label
+                        x:Name="NombreEstudianteLabel"
+                        Text="Estudiante:"
+                        FontSize="17" />
+
+                    <Label
+                        x:Name="LegajoEstudianteLabel"
+                        Text="Legajo:" />
+
+                    <Label
+                        x:Name="ComisionEstudianteLabel"
+                        Text="Comisión:" />
+
+                </VerticalStackLayout>
+
+            </Border>
+
+            <Label
+                Text="Historial de asistencias"
+                FontSize="20"
+                FontAttributes="Bold" />
+
+            <VerticalStackLayout
+                x:Name="ContenedorAsistencias"
+                Spacing="8" />
+
+            <Label
+                Text="Historial de trabajos prácticos"
+                FontSize="20"
+                FontAttributes="Bold" />
+
+            <VerticalStackLayout
+                x:Name="ContenedorTrabajos"
+                Spacing="8" />
+            <Button
+                Text="← Volver al Panel"
+                HorizontalOptions="Start"
+                BackgroundColor="#E0E0E0"
+                TextColor="Black"
+                Clicked="Volver_Clicked" />
+
+            <Label
+                Text="Riesgo académico"
+                FontSize="20"
+                FontAttributes="Bold" />
+
+            <Label
+                x:Name="RiesgoEstudianteLabel"
+                Text="Riesgo: pendiente de cargar" />
+            <!-- REGISTRAR INTERVENCIÓN -->
+
+            <Label
+    Text="Registrar intervención"
+    FontSize="22"
+    FontAttributes="Bold"
+    Margin="0,20,0,0" />
+
+            <Label Text="Fecha del contacto" />
+
+            <DatePicker
+    x:Name="FechaIntervencionPicker" />
+
+            <Label Text="Medio de contacto" />
+
+            <Picker
+    x:Name="MedioContactoPicker"
+    Title="Seleccionar medio">
+
+                <Picker.Items>
+                    <x:String>Telefónico</x:String>
+                    <x:String>Correo electrónico</x:String>
+                    <x:String>Presencial</x:String>
+                    <x:String>WhatsApp</x:String>
+                    <x:String>Otro</x:String>
+                </Picker.Items>
+
+            </Picker>
+
+            <Label Text="Motivo del contacto" />
+
+            <Editor
+    x:Name="MotivoIntervencionEditor"
+    Placeholder="Ej.: Inasistencias reiteradas"
+    HeightRequest="100" />
+
+            <Label Text="Resultado de la intervención" />
+
+            <Editor
+    x:Name="ResultadoIntervencionEditor"
+    Placeholder="Ej.: El estudiante se comprometió a regularizar su situación"
+    HeightRequest="100" />
+
+            <Button
+    Text="GUARDAR INTERVENCIÓN"
+    BackgroundColor="#1976D2"
+    TextColor="White"
+    Clicked="GuardarIntervencion_Clicked" />
+
+            <!-- HISTORIAL DE INTERVENCIONES -->
+
+            <Label
+    Text="Historial de intervenciones"
+    FontSize="22"
+    FontAttributes="Bold"
+    Margin="0,20,0,0" />
+
+            <VerticalStackLayout
+    x:Name="ContenedorIntervenciones"
+    Spacing="10" />
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+
+</ContentPage>

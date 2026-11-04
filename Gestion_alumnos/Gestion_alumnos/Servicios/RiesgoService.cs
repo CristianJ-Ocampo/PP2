@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using Gestion_alumnos.Modelos;
 
 namespace Gestion_alumnos.Servicios
@@ -9,10 +9,12 @@ namespace Gestion_alumnos.Servicios
     {
         private readonly DatosService datosService;
 
-        // Valores iniciales definidos por el equipo.
-        // Más adelante H7 permitirá configurarlos.
-        private const double UmbralMedio = 20;
-        private const double UmbralAlto = 40;
+        // UMBRALES CONFIGURABLES
+        private double UmbralMedio =>
+            datosService.ConfiguracionRiesgo.UmbralMedio;
+
+        private double UmbralAlto =>
+            datosService.ConfiguracionRiesgo.UmbralAlto;
 
         public RiesgoService(DatosService datosService)
         {
@@ -25,56 +27,67 @@ namespace Gestion_alumnos.Servicios
 
             foreach (var estudiante in datosService.Estudiantes)
             {
-                // Clases registradas de su comisión
-                var clases = datosService.Clases
+                // CLASES DE LA COMISIÓN
+                var fechasClases = datosService.Clases
                     .Where(c => c.Comision == estudiante.Comision)
+                    .Select(c => c.Fecha.Date)
+                    .Distinct()
                     .ToList();
 
-                int totalClases = clases.Count;
-
-                // Cantidad de clases en las que figura ausente
-                int inasistencias = clases.Count(clase =>
-                    datosService.Asistencias.Any(a =>
+                // ASISTENCIAS EFECTIVAMENTE REGISTRADAS
+                var asistencias = datosService.Asistencias
+                    .Where(a =>
                         a.LegajoEstudiante == estudiante.Legajo &&
                         a.Comision == estudiante.Comision &&
-                        a.FechaClase.Date == clase.Fecha.Date &&
-                        !a.Presente));
-
-                double porcentajeInasistencias = totalClases > 0
-                    ? (double)inasistencias / totalClases * 100
-                    : 0;
-
-                // Trabajos prácticos de su comisión
-                var trabajos = datosService.Trabajos
-                    .Where(t => t.Comision == estudiante.Comision)
+                        fechasClases.Contains(a.FechaClase.Date))
+                    .GroupBy(a => a.FechaClase.Date)
+                    .Select(g => g.First())
                     .ToList();
 
-                int totalTrabajos = trabajos.Count;
+                int totalAsistencias = asistencias.Count;
 
-                // Cantidad de trabajos que figuran como no entregados
-                int noEntregas = trabajos.Count(trabajo =>
-                    datosService.Entregas.Any(e =>
-                        e.LegajoEstudiante == estudiante.Legajo &&
-                        e.Comision == estudiante.Comision &&
-                        e.NombreTrabajo == trabajo.Nombre &&
-                        !e.Entregado));
-
-                double porcentajeNoEntregas = totalTrabajos > 0
-                    ? (double)noEntregas / totalTrabajos * 100
+                int inasistencias = asistencias.Count(a => !a.Presente);
+                
+                double porcentajeInasistencias = totalAsistencias > 0
+                    ? (double)inasistencias / totalAsistencias * 100
                     : 0;
 
-                // Combinar las señales disponibles.
-                // Si solo hay una, usamos esa señal al 100 %.
-                bool hayAsistencias = totalClases > 0;
-                bool hayEntregas = totalTrabajos > 0;
+                // TRABAJOS PRÁCTICOS DE LA COMISIÓN
+                var nombresTrabajos = datosService.Trabajos
+                    .Where(t => t.Comision == estudiante.Comision)
+                    .Select(t => t.Nombre)
+                    .Distinct()
+                    .ToList();
+
+                // ENTREGAS EFECTIVAMENTE REGISTRADAS
+                var entregas = datosService.Entregas
+                    .Where(e =>
+                        e.LegajoEstudiante == estudiante.Legajo &&
+                        e.Comision == estudiante.Comision &&
+                        nombresTrabajos.Contains(e.NombreTrabajo))
+                    .GroupBy(e => e.NombreTrabajo)
+                    .Select(g => g.First())
+                    .ToList();
+
+                int totalEntregas = entregas.Count;
+
+                int noEntregas = entregas.Count(e => !e.Entregado);
+
+                double porcentajeNoEntregas = totalEntregas > 0
+                    ? (double)noEntregas / totalEntregas * 100
+                    : 0;
+
+                // DETERMINAR SEÑALES DISPONIBLES
+                bool hayAsistencias = totalAsistencias > 0;
+                bool hayEntregas = totalEntregas > 0;
 
                 double riesgo = 0;
                 string nivel = "Sin datos";
 
+                // CALCULAR RIESGO
                 if (hayAsistencias && hayEntregas)
                 {
-                    riesgo = porcentajeInasistencias * 0.5
-                           + porcentajeNoEntregas * 0.5;
+                    riesgo = porcentajeInasistencias * 0.5 + porcentajeNoEntregas * 0.5;
                 }
                 else if (hayAsistencias)
                 {
@@ -85,6 +98,7 @@ namespace Gestion_alumnos.Servicios
                     riesgo = porcentajeNoEntregas;
                 }
 
+                // CLASIFICAR RIESGO
                 if (hayAsistencias || hayEntregas)
                 {
                     if (riesgo >= UmbralAlto)
@@ -95,21 +109,26 @@ namespace Gestion_alumnos.Servicios
                         nivel = "Bajo";
                 }
 
+                // CREAR RESULTADO
                 resultados.Add(new RiesgoEstudiante
                 {
                     Legajo = estudiante.Legajo,
-                    NombreCompleto =
-                        $"{estudiante.Apellido}, {estudiante.Nombre}",
+
+                    NombreCompleto = $"{estudiante.Apellido}, {estudiante.Nombre}",
+
                     Comision = estudiante.Comision,
-                    PorcentajeInasistencias =
-                        porcentajeInasistencias,
-                    PorcentajeNoEntregas =
-                        porcentajeNoEntregas,
+
+                    PorcentajeInasistencias = porcentajeInasistencias,
+
+                    PorcentajeNoEntregas = porcentajeNoEntregas,
+
                     PorcentajeRiesgo = riesgo,
+
                     NivelRiesgo = nivel
                 });
             }
 
+            // ORDENAR DE MAYOR A MENOR RIESGO
             return resultados
                 .OrderByDescending(r => r.PorcentajeRiesgo)
                 .ToList();

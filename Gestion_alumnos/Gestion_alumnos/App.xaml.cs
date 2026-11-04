@@ -1,21 +1,38 @@
 ﻿
+using Gestion_alumnos.Servicios;
+
 namespace Gestion_alumnos
 {
     public partial class App : Application
     {
-        private readonly AppShell _appShell;
+        private readonly AppShell appShell;
+        private readonly DatosService datosService;
 
-        public App(AppShell appShell)
+        public App(AppShell appShell, DatosService datosService)
         {
             InitializeComponent();
 
-            _appShell = appShell;
+            this.appShell = appShell;
+            this.datosService = datosService;
         }
 
-        protected override Window CreateWindow(
-            IActivationState? activationState)
+        protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(_appShell);
+            Window ventana = new Window(appShell);
+
+            ventana.Created += async (sender, args) =>
+            {
+                try
+                {
+                    await datosService.CargarDatosAsync();
+                }
+                catch (Exception ex)
+                {
+                    await Shell.Current.DisplayAlertAsync("Error de base de datos",ex.Message,"Aceptar");
+                }
+            };
+
+            return ventana;
         }
     }
 }

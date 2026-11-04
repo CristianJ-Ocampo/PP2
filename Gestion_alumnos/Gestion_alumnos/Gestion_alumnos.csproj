@@ -68,31 +68,50 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
+		<PackageReference Include="sqlite-net-pcl" Version="1.11.285" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Asistencia Page.xaml.cs">
+	  <Compile Update="Views\Asistencia Page.xaml.cs">
 	    <DependentUpon>Asistencia Page.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="EntregaPage.xaml.cs">
+	  <Compile Update="Views\EntregaPage.xaml.cs">
 	    <DependentUpon>EntregaPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="PanelPage.xaml.cs">
+	  <Compile Update="Views\AdministracionPage.xaml.cs">
+	    <DependentUpon>AdministracionPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\HistorialestudiantePage.xaml.cs">
+	    <DependentUpon>HistorialestudiantePage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\TrabajosPage.xaml.cs">
+	    <DependentUpon>TrabajosPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\PanelPage.xaml.cs">
 	    <DependentUpon>PanelPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="CalendarioPage.xaml">
+	  <MauiXaml Update="Views\CalendarioPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Asistencia Page.xaml">
+	  <MauiXaml Update="Views\Asistencia Page.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="EntregaPage.xaml">
+	  <MauiXaml Update="Views\EntregaPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="PanelPage.xaml">
+	  <MauiXaml Update="Views\AdministracionPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\HistorialestudiantePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\TrabajosPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\PanelPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

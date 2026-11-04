@@ -10,6 +10,7 @@ namespace Gestion_alumnos.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {
+        private readonly DatosService datosService;
         public ObservableCollection<Estudiante> Estudiantes { get; }
 
         public ObservableCollection<Estudiante> EstudiantesVisibles { get; }
@@ -95,24 +96,26 @@ namespace Gestion_alumnos.ViewModels
         // NOTIFICACIÓN DE CAMBIOS
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        private void OnPropertyChanged(
-            [CallerMemberName] string? nombrePropiedad = null)
+        private void OnPropertyChanged([CallerMemberName] string? nombrePropiedad = null)
         {
-            PropertyChanged?.Invoke(
-                this,
-                new PropertyChangedEventArgs(nombrePropiedad));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nombrePropiedad));
         }
 
         // CONSTRUCTOR
         public MainViewModel(DatosService datosService)
         {
+            this.datosService = datosService;
+
             Estudiantes = datosService.Estudiantes;
 
-            EstudiantesVisibles =
-                new ObservableCollection<Estudiante>();
+            EstudiantesVisibles = new ObservableCollection<Estudiante>();
 
-            AgregarEstudianteCommand =
-                new Command(async () => await AgregarEstudianteAsync());
+            AgregarEstudianteCommand = new Command(async () => await AgregarEstudianteAsync());
+
+            Estudiantes.CollectionChanged += (sender, args) =>
+            {
+                ActualizarNomina(ComisionSeleccionada);
+            };
         }
 
         // AGREGAR ESTUDIANTE
@@ -120,23 +123,20 @@ namespace Gestion_alumnos.ViewModels
         {
             if (string.IsNullOrWhiteSpace(Apellido))
             {
-                await MostrarError("Error",
-                    "El apellido no puede estar vacío.");
+                await MostrarError("Error","El apellido no puede estar vacío.");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(Nombre))
             {
-                await MostrarError("Error",
-                    "El nombre no puede estar vacío.");
+                await MostrarError("Error","El nombre no puede estar vacío.");
                 return;
             }
 
             if (!int.TryParse(Legajo, out int numeroLegajo)
                 || numeroLegajo <= 0)
             {
-                await MostrarError("Error",
-                    "El legajo debe ser un número positivo válido.");
+                await MostrarError("Error","El legajo debe ser un número positivo válido.");
                 return;
             }
 
@@ -145,18 +145,14 @@ namespace Gestion_alumnos.ViewModels
             {
                 if (estudiante.Legajo == numeroLegajo)
                 {
-                    await MostrarError(
-                        "Legajo repetido",
-                        $"El legajo {numeroLegajo} ya pertenece a " +
-                        $"{estudiante.Nombre} {estudiante.Apellido}.");
+                    await MostrarError("Legajo repetido",$"El legajo {numeroLegajo} ya pertenece a " + $"{estudiante.Nombre} {estudiante.Apellido}.");
                     return;
                 }
             }
 
             if (string.IsNullOrWhiteSpace(ComisionSeleccionada))
             {
-                await MostrarError("Error",
-                    "Debe seleccionar una comisión.");
+                await MostrarError("Error","Debe seleccionar una comisión.");
                 return;
             }
 
@@ -169,7 +165,15 @@ namespace Gestion_alumnos.ViewModels
                 Comision = ComisionSeleccionada
             };
 
-            Estudiantes.Add(nuevoEstudiante);
+            try
+            {
+                await datosService.GuardarEstudianteAsync(nuevoEstudiante);
+            }
+            catch (Exception ex)
+            {
+                await MostrarError("Error de SQLite",$"No se pudo guardar el estudiante: {ex.Message}");
+                return;
+            }
 
             // ACTUALIZAR NÓMINA
             ActualizarNomina(ComisionSeleccionada);
@@ -185,8 +189,7 @@ namespace Gestion_alumnos.ViewModels
         {
             if (Shell.Current != null)
             {
-                await Shell.Current.DisplayAlertAsync(
-                    titulo, mensaje, "OK");
+                await Shell.Current.DisplayAlertAsync(titulo, mensaje, "OK");
             }
         }
 

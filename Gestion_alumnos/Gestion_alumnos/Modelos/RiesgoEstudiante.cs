@@ -19,5 +19,14 @@ namespace Gestion_alumnos.Modelos
         public double PorcentajeRiesgo { get; set; }
 
         public string NivelRiesgo { get; set; } = string.Empty;
+
+        public bool FueContactado { get; set; }
+
+        public string EstadoContacto { get; set; }
+            = "Sin intervenciones registradas";
+
+        public string UltimoContacto { get; set; } = "";
+
+        public string CantidadIntervenciones { get; set; } = "";
     }
 }
