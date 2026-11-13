@@ -12,6 +12,9 @@ namespace Gestion_alumnos.ViewModels
     {
         private readonly DatosService datosService;
 
+        // LISTA CENTRALIZADA DE COMISIONES
+        public IReadOnlyList<string> Comisiones => ComisionesService.Todas;
+
         // COLECCIONES
         public ObservableCollection<Clase> Clases { get; }
         public ObservableCollection<TrabajoPractico> Trabajos { get; }
@@ -104,12 +107,9 @@ namespace Gestion_alumnos.ViewModels
         // NOTIFICACIÓN DE CAMBIOS
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        private void OnPropertyChanged(
-            [CallerMemberName] string? nombrePropiedad = null)
+        private void OnPropertyChanged([CallerMemberName] string? nombrePropiedad = null)
         {
-            PropertyChanged?.Invoke(
-                this,
-                new PropertyChangedEventArgs(nombrePropiedad));
+            PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(nombrePropiedad));
         }
 
         // CONSTRUCTOR
@@ -123,11 +123,9 @@ namespace Gestion_alumnos.ViewModels
             ClasesVisibles = new ObservableCollection<Clase>();
             TrabajosVisibles = new ObservableCollection<TrabajoPractico>();
 
-            AgregarClaseCommand =
-                new Command(async () => await AgregarClaseAsync());
+            AgregarClaseCommand = new Command(async () => await AgregarClaseAsync());
 
-            AgregarTrabajoCommand =
-                new Command(async () => await AgregarTrabajoAsync());
+            AgregarTrabajoCommand = new Command(async () => await AgregarTrabajoAsync());
 
             // ACTUALIZAR LAS LISTAS CUANDO CAMBIAN LOS DATOS
             Clases.CollectionChanged += (sender, args) =>

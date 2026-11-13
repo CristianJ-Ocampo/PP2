@@ -10,6 +10,7 @@ namespace Gestion_alumnos
             AsistenciaPage asistenciaPage,
             EntregaPage entregaPage,
             PanelPage panelPage,
+            ReporteRiesgoPage reporteRiesgoPage,
             AdministracionPage administracionPage)
         {
             InitializeComponent();
@@ -22,6 +23,7 @@ namespace Gestion_alumnos
             AsistenciaTab.Content = asistenciaPage;
             EntregasTab.Content = entregaPage;
             PanelTab.Content = panelPage;
+            ReporteRiesgoTab.Content = reporteRiesgoPage;
             AdministracionTab.Content = administracionPage;
         }
     }

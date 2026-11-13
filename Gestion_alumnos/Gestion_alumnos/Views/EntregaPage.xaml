@@ -1,75 +1,188 @@
 <?xml version="1.0" encoding="utf-8" ?>
+
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="Gestion_alumnos.EntregaPage"
-    Title="Entregas">
+    Title="Entregas"
+    BackgroundColor="#F3F6FA">
 
-    <Grid Padding="20"
-          RowDefinitions="Auto,Auto,Auto,Auto,*,Auto"
-          RowSpacing="12">
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="25"
+            Spacing="18"
+            HorizontalOptions="Center"
+            WidthRequest="700">
 
-        <Label Grid.Row="0"
-               Text="Registro de entregas"
-               FontSize="24"
-               FontAttributes="Bold" />
+            <!-- ENCABEZADO -->
+            <VerticalStackLayout
+                Spacing="5"
+                HorizontalOptions="Center">
 
-        <VerticalStackLayout Grid.Row="1" Spacing="5">
-            <Label Text="Seleccionar comisión" />
+                <Label
+                    Text="Registro de entregas"
+                    FontSize="30"
+                    FontAttributes="Bold"
+                    TextColor="#193B68"
+                    HorizontalTextAlignment="Center" />
 
-            <Picker Title="Elegí una comisión"
-                    SelectedItem="{Binding ComisionSeleccionada, Mode=TwoWay}">
-                <Picker.Items>
-                    <x:String>1°A</x:String>
-                    <x:String>1°B</x:String>
-                    <x:String>2°A</x:String>
-                    <x:String>2°B</x:String>
-                </Picker.Items>
-            </Picker>
-        </VerticalStackLayout>
+                <Label
+                    Text="Control de trabajos prácticos entregados"
+                    FontSize="14"
+                    TextColor="#64748B"
+                    HorizontalTextAlignment="Center" />
 
-        <VerticalStackLayout Grid.Row="2" Spacing="5">
-            <Label Text="Seleccionar trabajo práctico" />
+            </VerticalStackLayout>
 
-            <Picker Title="Elegí un trabajo"
-                    ItemsSource="{Binding TrabajosDisponibles}"
-                    SelectedItem="{Binding TrabajoSeleccionado, Mode=TwoWay}"
-                    ItemDisplayBinding="{Binding Nombre}" />
-        </VerticalStackLayout>
+            <!-- FORMULARIO -->
+            <Border
+                BackgroundColor="White"
+                Stroke="#DEE6EF"
+                StrokeThickness="1"
+                Padding="22">
 
-        <Label Grid.Row="3"
-               Text="{Binding MensajeEstado}"
-               FontSize="14"
-               TextColor="Gray" />
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
 
-        <CollectionView Grid.Row="4"
-                        ItemsSource="{Binding EstudiantesEntrega}"
-                        SelectionMode="None">
+                <VerticalStackLayout Spacing="14">
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Grid ColumnDefinitions="*,Auto"
-                          Padding="10"
-                          ColumnSpacing="10">
+                    <Label
+                        Text="Seleccionar trabajo práctico"
+                        FontSize="21"
+                        FontAttributes="Bold"
+                        TextColor="#193B68" />
 
-                        <Label Grid.Column="0"
-                               Text="{Binding NombreCompleto}"
-                               VerticalOptions="Center" />
+                    <Label
+                        Text="Comisión"
+                        FontSize="14"
+                        TextColor="#475569" />
 
-                        <CheckBox Grid.Column="1"
-                                  IsChecked="{Binding Entregado, Mode=TwoWay}"
-                                  VerticalOptions="Center" />
+                    <Picker
+                        Title="Elegí una comisión"
+                        ItemsSource="{Binding Comisiones}"
+                        SelectedItem="{Binding ComisionSeleccionada, Mode=TwoWay}"
+                        BackgroundColor="#F8FAFC"
+                        TextColor="#1E293B"
+                        TitleColor="#64748B" />
 
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
+                    <Label
+                        Text="Trabajo práctico"
+                        FontSize="14"
+                        TextColor="#475569" />
 
-        </CollectionView>
+                    <Picker
+                        Title="Elegí un trabajo"
+                        ItemsSource="{Binding TrabajosDisponibles}"
+                        SelectedItem="{Binding TrabajoSeleccionado, Mode=TwoWay}"
+                        ItemDisplayBinding="{Binding Nombre}"
+                        BackgroundColor="#F8FAFC"
+                        TextColor="#1E293B"
+                        TitleColor="#64748B" />
 
-        <Button Grid.Row="5"
-                Text="Guardar entregas"
+                </VerticalStackLayout>
+
+            </Border>
+
+            <!-- MENSAJE DE ESTADO -->
+            <Label
+                Text="{Binding MensajeEstado}"
+                FontSize="14"
+                TextColor="#64748B"
+                HorizontalTextAlignment="Center" />
+
+            <!-- LISTADO -->
+            <VerticalStackLayout Spacing="12">
+
+                <Label
+                    Text="Entregas de estudiantes"
+                    FontSize="22"
+                    FontAttributes="Bold"
+                    TextColor="#193B68"
+                    HorizontalTextAlignment="Center" />
+
+                <Grid
+                    ColumnDefinitions="*,Auto"
+                    ColumnSpacing="12"
+                    Padding="15,5">
+
+                    <Label
+                        Grid.Column="0"
+                        Text="Estudiante"
+                        FontAttributes="Bold"
+                        TextColor="#193B68" />
+
+                    <Label
+                        Grid.Column="1"
+                        Text="Entregado"
+                        FontAttributes="Bold"
+                        TextColor="#193B68" />
+
+                </Grid>
+
+                <CollectionView
+                    ItemsSource="{Binding EstudiantesEntrega}"
+                    SelectionMode="None"
+                    HeightRequest="350">
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+
+                            <Border
+                                BackgroundColor="White"
+                                Stroke="#DEE6EF"
+                                StrokeThickness="1"
+                                Padding="10"
+                                Margin="0,0,0,8">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8" />
+                                </Border.StrokeShape>
+
+                                <Grid
+                                    ColumnDefinitions="*,Auto"
+                                    ColumnSpacing="12"
+                                    Padding="5">
+
+                                    <Label
+                                        Grid.Column="0"
+                                        Text="{Binding NombreCompleto}"
+                                        VerticalOptions="Center"
+                                        FontSize="16"
+                                        TextColor="#334155" />
+
+                                    <CheckBox
+                                        Grid.Column="1"
+                                        IsChecked="{Binding Entregado, Mode=TwoWay}"
+                                        Color="#16865D"
+                                        VerticalOptions="Center" />
+
+                                </Grid>
+
+                            </Border>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                </CollectionView>
+
+            </VerticalStackLayout>
+
+            <!-- BOTON GUARDAR -->
+            <Button
+                Text="GUARDAR ENTREGAS"
                 Command="{Binding GuardarEntregasCommand}"
-                IsEnabled="{Binding PuedeGuardar}" />
+                IsEnabled="{Binding PuedeGuardar}"
+                BackgroundColor="#16865D"
+                TextColor="White"
+                FontAttributes="Bold"
+                CornerRadius="8"
+                WidthRequest="240"
+                HeightRequest="46"
+                HorizontalOptions="Center"
+                Margin="0,10,0,20" />
 
-    </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>

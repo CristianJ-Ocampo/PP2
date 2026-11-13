@@ -480,3 +480,22 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Local SQLite databases and sidecar files
+*.[dD][bB]
+*.[dD][bB]3
+*.[sS][qQ][lL][iI][tT][eE]
+*.[sS][qQ][lL][iI][tT][eE]3
+*.db-*
+*.db3-*
+*.sqlite-*
+*.sqlite3-*
+# Local backups and exported data
+*.bak
+*.backup
+*.db.*
+*.db3.*
+*.sqlite.*
+*.sqlite3.*
+[Bb]ackups/
+[Rr]espaldos/

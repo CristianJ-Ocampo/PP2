@@ -4,83 +4,182 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="Gestion_alumnos.TrabajosPage"
-    Title="Trabajos prácticos">
+    Title="Trabajos prácticos"
+    BackgroundColor="#F3F6FA">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="15">
+        <VerticalStackLayout
+            Padding="25"
+            Spacing="20"
+            HorizontalOptions="Center"
+            MaximumWidthRequest="900">
 
-            <Label
-                Text="Trabajos prácticos"
-                FontSize="26"
-                FontAttributes="Bold" />
+            <!-- ENCABEZADO -->
+            <VerticalStackLayout
+                Spacing="5"
+                HorizontalOptions="Center">
 
-            <Picker
-                Title="Seleccione una comisión"
-                SelectedItem="{Binding ComisionSeleccionada, Mode=TwoWay}">
+                <Label
+                    Text="Trabajos prácticos"
+                    FontSize="30"
+                    FontAttributes="Bold"
+                    TextColor="#193B68"
+                    HorizontalTextAlignment="Center" />
 
-                <Picker.Items>
-                    <x:String>1°A</x:String>
-                    <x:String>1°B</x:String>
-                    <x:String>2°A</x:String>
-                </Picker.Items>
+                <Label
+                    Text="Gestión de trabajos y fechas de entrega"
+                    FontSize="14"
+                    TextColor="#64748B"
+                    HorizontalTextAlignment="Center" />
 
-            </Picker>
+            </VerticalStackLayout>
 
-            <Label
-                Text="Registrar trabajo práctico"
-                FontSize="20"
-                FontAttributes="Bold" />
+            <!-- FORMULARIO -->
+            <Border
+                BackgroundColor="White"
+                Stroke="#DEE6EF"
+                StrokeThickness="1"
+                Padding="22"
+                WidthRequest="650"
+                HorizontalOptions="Center">
 
-            <Entry
-                Placeholder="Nombre del trabajo práctico"
-                Text="{Binding NombreTrabajo, Mode=TwoWay}" />
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
 
-            <Label Text="Fecha de entrega" />
+                <VerticalStackLayout Spacing="14">
 
-            <DatePicker
-                Date="{Binding FechaEntrega, Mode=TwoWay}" />
+                    <Label
+                        Text="Registrar trabajo práctico"
+                        FontSize="21"
+                        FontAttributes="Bold"
+                        TextColor="#193B68" />
 
-            <Button
-                Text="AGREGAR TRABAJO"
-                Command="{Binding AgregarTrabajoCommand}" />
+                    <Label
+                        Text="Comisión"
+                        FontSize="14"
+                        TextColor="#475569" />
 
-            <Label
-                Text="Trabajos programados"
-                FontSize="20"
-                FontAttributes="Bold" />
+                    <Picker
+                        Title="Seleccione una comisión"
+                        ItemsSource="{Binding Comisiones}"
+                        SelectedItem="{Binding ComisionSeleccionada, Mode=TwoWay}"
+                        BackgroundColor="#F8FAFC"
+                        TextColor="#1E293B"
+                        TitleColor="#64748B" />
 
-            <Label
-                Text="No hay trabajos registrados en esta comisión."
-                IsVisible="{Binding MostrarTrabajosVacios}"
-                TextColor="Gray" />
+                    <Label
+                        Text="Nombre del trabajo práctico"
+                        FontSize="14"
+                        TextColor="#475569" />
 
-            <CollectionView
-                ItemsSource="{Binding TrabajosVisibles}"
-                HeightRequest="300">
+                    <Entry
+                        Placeholder="Ingresar nombre del trabajo"
+                        Text="{Binding NombreTrabajo, Mode=TwoWay}"
+                        BackgroundColor="#F8FAFC"
+                        TextColor="#1E293B" />
 
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                    <Label
+                        Text="Fecha de entrega"
+                        FontSize="14"
+                        TextColor="#475569" />
 
-                        <VerticalStackLayout Padding="10" Spacing="5">
+                    <DatePicker
+                        Date="{Binding FechaEntrega, Mode=TwoWay}"
+                        BackgroundColor="#F8FAFC"
+                        TextColor="#1E293B" />
 
-                            <Label
-                                Text="{Binding Nombre}"
-                                FontAttributes="Bold"
-                                FontSize="17" />
+                    <!-- BOTON AGREGAR -->
+                    <Button
+                        Text="AGREGAR TRABAJO"
+                        Command="{Binding AgregarTrabajoCommand}"
+                        BackgroundColor="#16865D"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
+                        WidthRequest="220"
+                        HeightRequest="46"
+                        HorizontalOptions="Center"
+                        Margin="0,12,0,0" />
 
-                            <Label
-                                Text="{Binding FechaEntrega,
-                                StringFormat='Entrega: {0:dd/MM/yyyy}'}" />
+                </VerticalStackLayout>
 
-                            <Label
-                                Text="{Binding Comision}" />
+            </Border>
 
-                        </VerticalStackLayout>
+            <!-- LISTADO DE TRABAJOS -->
+            <VerticalStackLayout
+                Spacing="12"
+                WidthRequest="650"
+                HorizontalOptions="Center">
 
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
+                <Label
+                    Text="Trabajos programados"
+                    FontSize="22"
+                    FontAttributes="Bold"
+                    TextColor="#193B68"
+                    Margin="0,12,0,0"
+                    HorizontalTextAlignment="Center" />
 
-            </CollectionView>
+                <Label
+                    Text="No hay trabajos registrados en esta comisión."
+                    IsVisible="{Binding MostrarTrabajosVacios}"
+                    TextColor="#64748B"
+                    HorizontalTextAlignment="Center" />
+
+                <CollectionView
+                    ItemsSource="{Binding TrabajosVisibles}"
+                    HeightRequest="300">
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+
+                            <Border
+                                BackgroundColor="White"
+                                Stroke="#DEE6EF"
+                                StrokeThickness="1"
+                                Padding="15"
+                                Margin="0,0,0,10">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
+
+                                <VerticalStackLayout Spacing="7">
+
+                                    <Label
+                                        Text="{Binding Nombre}"
+                                        FontAttributes="Bold"
+                                        FontSize="18"
+                                        TextColor="#193B68" />
+
+                                    <Label
+                                        Text="{Binding FechaEntrega, StringFormat='Entrega: {0:dd/MM/yyyy}'}"
+                                        FontSize="15"
+                                        TextColor="#334155" />
+
+                                    <HorizontalStackLayout Spacing="6">
+
+                                        <Label
+                                            Text="Comisión:"
+                                            FontAttributes="Bold"
+                                            TextColor="#64748B" />
+
+                                        <Label
+                                            Text="{Binding Comision}"
+                                            TextColor="#334155" />
+
+                                    </HorizontalStackLayout>
+
+                                </VerticalStackLayout>
+
+                            </Border>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                </CollectionView>
+
+            </VerticalStackLayout>
 
         </VerticalStackLayout>
     </ScrollView>

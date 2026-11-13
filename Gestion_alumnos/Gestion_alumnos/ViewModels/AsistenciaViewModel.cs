@@ -12,6 +12,9 @@ namespace Gestion_alumnos.ViewModels
     {
         private readonly DatosService datosService;
 
+        // LISTA CENTRALIZADA DE COMISIONES
+        public IReadOnlyList<string> Comisiones => ComisionesService.Todas;
+
         // LISTAS PARA MOSTRAR EN PANTALLA
         public ObservableCollection<Clase> ClasesDisponibles { get; }
 
@@ -46,8 +49,7 @@ namespace Gestion_alumnos.ViewModels
         }
 
         // MENSAJE DE LA PANTALLA
-        private string mensajeEstado =
-            "Seleccione una comisión y una clase para registrar asistencia.";
+        private string mensajeEstado = "Seleccione una comisión y una clase para registrar asistencia.";
 
         public string MensajeEstado
         {
@@ -78,12 +80,9 @@ namespace Gestion_alumnos.ViewModels
         // NOTIFICACIÓN DE CAMBIOS
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        private void OnPropertyChanged(
-            [CallerMemberName] string? nombrePropiedad = null)
+        private void OnPropertyChanged([CallerMemberName] string? nombrePropiedad = null)
         {
-            PropertyChanged?.Invoke(
-                this,
-                new PropertyChangedEventArgs(nombrePropiedad));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nombrePropiedad));
         }
 
         // CONSTRUCTOR
@@ -93,11 +92,9 @@ namespace Gestion_alumnos.ViewModels
 
             ClasesDisponibles = new ObservableCollection<Clase>();
 
-            EstudiantesAsistencia =
-                new ObservableCollection<EstudianteAsistencia>();
+            EstudiantesAsistencia = new ObservableCollection<EstudianteAsistencia>();
 
-            GuardarAsistenciaCommand =
-                new Command(async () => await GuardarAsistenciaAsync());
+            GuardarAsistenciaCommand = new Command(async () => await GuardarAsistenciaAsync());
 
             // ACTUALIZAR LAS CLASES SI SE CARGAN DESDE SQLITE
             datosService.Clases.CollectionChanged += (sender, args) =>
@@ -118,8 +115,7 @@ namespace Gestion_alumnos.ViewModels
 
             if (string.IsNullOrWhiteSpace(ComisionSeleccionada))
             {
-                MensajeEstado =
-                    "Seleccione una comisión y una clase para registrar asistencia.";
+                MensajeEstado = "Seleccione una comisión y una clase para registrar asistencia.";
                 return;
             }
 
@@ -168,8 +164,7 @@ namespace Gestion_alumnos.ViewModels
                 {
                     Legajo = estudiante.Legajo,
 
-                    NombreCompleto =
-                        estudiante.Apellido + ", " + estudiante.Nombre,
+                    NombreCompleto = estudiante.Apellido + ", " + estudiante.Nombre,
 
                     Presente = asistenciaGuardada?.Presente ?? false
                 };
@@ -189,9 +184,7 @@ namespace Gestion_alumnos.ViewModels
         {
             if (ClaseSeleccionada == null)
             {
-                await MostrarMensaje(
-                    "Error",
-                    "Debe seleccionar una clase.");
+                await MostrarMensaje("Error","Debe seleccionar una clase.");
                 return;
             }
 
@@ -218,8 +211,7 @@ namespace Gestion_alumnos.ViewModels
                         // CORREGIR REGISTRO EXISTENTE
                         asistenciaExistente.Presente = estudiante.Presente;
 
-                        await datosService.GuardarAsistenciaAsync(
-                            asistenciaExistente);
+                        await datosService.GuardarAsistenciaAsync(asistenciaExistente);
                     }
                     else
                     {
@@ -232,25 +224,19 @@ namespace Gestion_alumnos.ViewModels
                             Presente = estudiante.Presente
                         };
 
-                        await datosService.GuardarAsistenciaAsync(
-                            nuevaAsistencia);
+                        await datosService.GuardarAsistenciaAsync(nuevaAsistencia);
                     }
                 }
 
-                await MostrarMensaje(
-                    "Asistencia registrada",
-                    "Los datos se guardaron correctamente en SQLite.");
+                await MostrarMensaje("Asistencia registrada", "Los datos se guardaron correctamente en SQLite.");
             }
             catch (Exception ex)
             {
-                await MostrarMensaje(
-                    "Error de SQLite",
-                    $"No se pudieron guardar las asistencias: {ex.Message}");
+                await MostrarMensaje("Error de SQLite",$"No se pudieron guardar las asistencias: {ex.Message}");
             }
             finally
             {
-                PuedeGuardar = ClaseSeleccionada != null &&
-                              EstudiantesAsistencia.Count > 0;
+                PuedeGuardar = ClaseSeleccionada != null && EstudiantesAsistencia.Count > 0;
             }
         }
 
@@ -259,8 +245,7 @@ namespace Gestion_alumnos.ViewModels
         {
             if (Shell.Current != null)
             {
-                await Shell.Current.DisplayAlertAsync(
-                    titulo, mensaje, "OK");
+                await Shell.Current.DisplayAlertAsync(titulo, mensaje, "OK");
             }
         }
     }

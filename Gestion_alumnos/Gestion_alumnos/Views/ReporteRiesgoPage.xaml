@@ -1,0 +1,157 @@
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Gestion_alumnos.ReporteRiesgoPage"
+    Title="Reporte de riesgo"
+    BackgroundColor="#F3F6FA">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="25"
+            Spacing="20"
+            HorizontalOptions="Center"
+            WidthRequest="700">
+
+            <!-- ENCABEZADO -->
+            <VerticalStackLayout
+                Spacing="5"
+                HorizontalOptions="Center">
+
+                <Label
+                    Text="Reporte de riesgo académico"
+                    FontSize="30"
+                    FontAttributes="Bold"
+                    TextColor="#193B68"
+                    HorizontalTextAlignment="Center" />
+
+                <Label
+                    Text="Estudiantes en riesgo por comisión"
+                    FontSize="14"
+                    TextColor="#64748B"
+                    HorizontalTextAlignment="Center" />
+
+            </VerticalStackLayout>
+
+            <!-- SELECCIÓN DE COMISIÓN -->
+            <Border
+                BackgroundColor="White"
+                Stroke="#DEE6EF"
+                StrokeThickness="1"
+                Padding="22">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="14">
+
+                    <Label
+                        Text="Seleccionar comisión"
+                        FontSize="21"
+                        FontAttributes="Bold"
+                        TextColor="#193B68" />
+
+                    <Picker
+                        Title="Elegí una comisión"
+                        ItemsSource="{Binding Comisiones}"
+                        SelectedItem="{Binding ComisionSeleccionada, Mode=TwoWay}"
+                        BackgroundColor="#F8FAFC"
+                        TextColor="#1E293B"
+                        TitleColor="#64748B" />
+
+                    <Button
+                        Text="ACTUALIZAR REPORTE"
+                        Command="{Binding ActualizarReporteCommand}"
+                        BackgroundColor="#16865D"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
+                        HeightRequest="46" />
+
+                </VerticalStackLayout>
+
+            </Border>
+
+            <!-- RESULTADOS -->
+            <Border
+                BackgroundColor="White"
+                Stroke="#DEE6EF"
+                StrokeThickness="1"
+                Padding="25">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="18">
+
+                    <Label
+                        Text="Resumen de la comisión"
+                        FontSize="22"
+                        FontAttributes="Bold"
+                        TextColor="#193B68"
+                        HorizontalTextAlignment="Center" />
+
+                    <Grid
+                        ColumnDefinitions="*,*"
+                        ColumnSpacing="15">
+
+                        <VerticalStackLayout
+                            Grid.Column="0"
+                            Spacing="8">
+
+                            <Label
+                                Text="Total de estudiantes"
+                                FontSize="14"
+                                TextColor="#64748B"
+                                HorizontalTextAlignment="Center" />
+
+                            <Label
+                                Text="{Binding TotalEstudiantes}"
+                                FontSize="36"
+                                FontAttributes="Bold"
+                                TextColor="#193B68"
+                                HorizontalTextAlignment="Center" />
+
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout
+                            Grid.Column="1"
+                            Spacing="8">
+
+                            <Label
+                                Text="Estudiantes en riesgo"
+                                FontSize="14"
+                                TextColor="#64748B"
+                                HorizontalTextAlignment="Center" />
+
+                            <Label
+                                Text="{Binding EstudiantesEnRiesgo}"
+                                FontSize="36"
+                                FontAttributes="Bold"
+                                TextColor="#B45309"
+                                HorizontalTextAlignment="Center" />
+
+                        </VerticalStackLayout>
+
+                    </Grid>
+
+                    <BoxView
+                        HeightRequest="1"
+                        Color="#DEE6EF" />
+
+                    <Label
+                        Text="{Binding MensajeEstado}"
+                        FontSize="17"
+                        FontAttributes="Bold"
+                        TextColor="#334155"
+                        HorizontalTextAlignment="Center" />
+
+                </VerticalStackLayout>
+
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

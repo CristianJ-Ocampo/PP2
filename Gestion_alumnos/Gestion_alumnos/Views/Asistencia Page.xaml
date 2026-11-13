@@ -4,89 +4,194 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="Gestion_alumnos.AsistenciaPage"
-    Title="Asistencia">
+    Title="Asistencia"
+    BackgroundColor="#F3F6FA">
 
-    <VerticalStackLayout Padding="20" Spacing="15">
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="25"
+            Spacing="20"
+            HorizontalOptions="Center"
+            MaximumWidthRequest="900">
 
-        <Label
-            Text="Registro de asistencia"
-            FontSize="26"
-            FontAttributes="Bold" />
+            <!-- ENCABEZADO -->
+            <VerticalStackLayout
+                Spacing="5"
+                HorizontalOptions="Center">
 
-        <Label
-            Text="Seleccione una comisión"
-            FontSize="18" />
+                <Label
+                    Text="Registro de asistencia"
+                    FontSize="30"
+                    FontAttributes="Bold"
+                    TextColor="#193B68"
+                    HorizontalTextAlignment="Center" />
 
-        <Picker
-            x:Name="ComisionPicker"
-            Title="Comisión"
-            SelectedItem="{Binding ComisionSeleccionada, Mode=TwoWay}">
+                <Label
+                    Text="Control de presentes y ausentes por clase"
+                    FontSize="14"
+                    TextColor="#64748B"
+                    HorizontalTextAlignment="Center" />
 
-            <Picker.Items>
-                <x:String>1°A</x:String>
-                <x:String>1°B</x:String>
-                <x:String>2°A</x:String>
-            </Picker.Items>
+            </VerticalStackLayout>
 
-        </Picker>
+            <!-- SELECCION DE CLASE -->
+            <Border
+                BackgroundColor="White"
+                Stroke="#DEE6EF"
+                StrokeThickness="1"
+                Padding="22"
+                WidthRequest="650"
+                HorizontalOptions="Center">
 
-        <Label
-            Text="Seleccione una clase"
-            FontSize="18" />
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
 
-        <Picker
-            x:Name="ClasePicker"
-            Title="Fecha de clase"
-            ItemsSource="{Binding ClasesDisponibles}"
-            SelectedItem="{Binding ClaseSeleccionada, Mode=TwoWay}"
-            ItemDisplayBinding="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" />
+                <VerticalStackLayout Spacing="14">
 
-        <Label
-            Text="Estudiantes de la comisión"
-            FontSize="20"
-            FontAttributes="Bold" />
+                    <Label
+                        Text="Seleccionar clase"
+                        FontSize="21"
+                        FontAttributes="Bold"
+                        TextColor="#193B68" />
 
-        <Label
-            x:Name="MensajeVacioLabel"
-            Text="{Binding MensajeEstado}"
-            TextColor="Gray" />
+                    <Label
+                        Text="Comisión"
+                        FontSize="14"
+                        TextColor="#475569" />
 
-        <CollectionView
-            x:Name="ListaEstudiantes"
-            ItemsSource="{Binding EstudiantesAsistencia}"
-            VerticalOptions="FillAndExpand">
+                    <Picker
+                        x:Name="ComisionPicker"
+                        Title="Comisión"
+                        ItemsSource="{Binding Comisiones}"
+                        SelectedItem="{Binding ComisionSeleccionada, Mode=TwoWay}"
+                        BackgroundColor="#F8FAFC"
+                        TextColor="#1E293B"
+                        TitleColor="#64748B" />
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
+                    <Label
+                        Text="Fecha de clase"
+                        FontSize="14"
+                        TextColor="#475569" />
 
-                    <Grid
-                        Padding="10"
-                        ColumnDefinitions="*,Auto"
-                        ColumnSpacing="12">
+                    <Picker
+                        x:Name="ClasePicker"
+                        Title="Seleccione una clase"
+                        ItemsSource="{Binding ClasesDisponibles}"
+                        SelectedItem="{Binding ClaseSeleccionada, Mode=TwoWay}"
+                        ItemDisplayBinding="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}"
+                        BackgroundColor="#F8FAFC"
+                        TextColor="#1E293B"
+                        TitleColor="#64748B" />
 
-                        <Label
-                            Grid.Column="0"
-                            Text="{Binding NombreCompleto}"
-                            VerticalOptions="Center"
-                            FontSize="16" />
+                </VerticalStackLayout>
 
-                        <CheckBox
-                            Grid.Column="1"
-                            IsChecked="{Binding Presente, Mode=TwoWay}" />
+            </Border>
 
-                    </Grid>
+            <!-- LISTADO DE ASISTENCIA -->
+            <VerticalStackLayout
+                Spacing="12"
+                WidthRequest="650"
+                HorizontalOptions="Center">
 
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
+                <Label
+                    Text="Estudiantes de la comisión"
+                    FontSize="22"
+                    FontAttributes="Bold"
+                    TextColor="#193B68"
+                    Margin="0,12,0,0"
+                    HorizontalTextAlignment="Center" />
 
-        </CollectionView>
+                <Label
+                    x:Name="MensajeVacioLabel"
+                    Text="{Binding MensajeEstado}"
+                    TextColor="#64748B"
+                    HorizontalTextAlignment="Center" />
 
-        <Button
-            x:Name="GuardarButton"
-            Text="GUARDAR ASISTENCIA"
-            Command="{Binding GuardarAsistenciaCommand}"
-            IsEnabled="{Binding PuedeGuardar}" />
+                <!-- ENCABEZADO DE COLUMNAS -->
+                <Grid
+                    ColumnDefinitions="*,Auto"
+                    ColumnSpacing="12"
+                    Padding="15,5">
 
-    </VerticalStackLayout>
+                    <Label
+                        Grid.Column="0"
+                        Text="Estudiante"
+                        FontAttributes="Bold"
+                        TextColor="#193B68" />
+
+                    <Label
+                        Grid.Column="1"
+                        Text="Presente"
+                        FontAttributes="Bold"
+                        TextColor="#193B68" />
+
+                </Grid>
+
+                <CollectionView
+                    x:Name="ListaEstudiantes"
+                    ItemsSource="{Binding EstudiantesAsistencia}"
+                    HeightRequest="350">
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+
+                            <Border
+                                BackgroundColor="White"
+                                Stroke="#DEE6EF"
+                                StrokeThickness="1"
+                                Padding="10"
+                                Margin="0,0,0,8">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8" />
+                                </Border.StrokeShape>
+
+                                <Grid
+                                    ColumnDefinitions="*,Auto"
+                                    ColumnSpacing="12"
+                                    Padding="5">
+
+                                    <Label
+                                        Grid.Column="0"
+                                        Text="{Binding NombreCompleto}"
+                                        VerticalOptions="Center"
+                                        FontSize="16"
+                                        TextColor="#334155" />
+
+                                    <CheckBox
+                                        Grid.Column="1"
+                                        IsChecked="{Binding Presente, Mode=TwoWay}"
+                                        Color="#16865D"
+                                        VerticalOptions="Center" />
+
+                                </Grid>
+
+                            </Border>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                </CollectionView>
+
+                <!-- GUARDAR ASISTENCIA -->
+                <Button
+                    x:Name="GuardarButton"
+                    Text="GUARDAR ASISTENCIA"
+                    Command="{Binding GuardarAsistenciaCommand}"
+                    IsEnabled="{Binding PuedeGuardar}"
+                    BackgroundColor="#16865D"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="8"
+                    WidthRequest="240"
+                    HeightRequest="46"
+                    HorizontalOptions="Center"
+                    Margin="0,12,0,0" />
+
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentPage>

@@ -10,11 +10,9 @@ namespace Gestion_alumnos.Servicios
         private readonly DatosService datosService;
 
         // UMBRALES CONFIGURABLES
-        private double UmbralMedio =>
-            datosService.ConfiguracionRiesgo.UmbralMedio;
+        private double UmbralMedio => datosService.ConfiguracionRiesgo.UmbralMedio;
 
-        private double UmbralAlto =>
-            datosService.ConfiguracionRiesgo.UmbralAlto;
+        private double UmbralAlto => datosService.ConfiguracionRiesgo.UmbralAlto;
 
         public RiesgoService(DatosService datosService)
         {

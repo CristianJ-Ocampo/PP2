@@ -14,6 +14,9 @@ namespace Gestion_alumnos.ViewModels
 
         private readonly DatosService datosService;
 
+        // LISTA CENTRALIZADA DE COMISIONES
+        public IReadOnlyList<string> Comisiones => ComisionesService.Todas;
+
         public ObservableCollection<RiesgoEstudiante> EstudiantesRiesgo
         { get; } = new();
 

@@ -4,74 +4,170 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="Gestion_alumnos.CalendarioPage"
-    Title="Calendario de clases">
+    Title="Calendario de clases"
+    BackgroundColor="#F3F6FA">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="15">
+        <VerticalStackLayout
+            Padding="25"
+            Spacing="20"
+            HorizontalOptions="Center"
+            MaximumWidthRequest="900">
 
-            <Label
-                Text="Calendario de clases"
-                FontSize="26"
-                FontAttributes="Bold" />
+            <!-- ENCABEZADO -->
+            <VerticalStackLayout
+                Spacing="5"
+                HorizontalOptions="Center">
 
-            <Picker
-                x:Name="ComisionPicker"
-                Title="Seleccione una comisión"
-                SelectedItem="{Binding ComisionSeleccionada, Mode=TwoWay}">
+                <Label
+                    Text="Calendario de clases"
+                    FontSize="30"
+                    FontAttributes="Bold"
+                    TextColor="#193B68"
+                    HorizontalTextAlignment="Center" />
 
-                <Picker.Items>
-                    <x:String>1°A</x:String>
-                    <x:String>1°B</x:String>
-                    <x:String>2°A</x:String>
-                </Picker.Items>
+                <Label
+                    Text="Organización de clases por comisión"
+                    FontSize="14"
+                    TextColor="#64748B"
+                    HorizontalTextAlignment="Center" />
 
-            </Picker>
+            </VerticalStackLayout>
 
-            <Label
-                Text="Registrar nueva clase"
-                FontSize="20"
-                FontAttributes="Bold" />
+            <!-- FORMULARIO -->
+            <Border
+                BackgroundColor="White"
+                Stroke="#DEE6EF"
+                StrokeThickness="1"
+                Padding="22"
+                WidthRequest="650"
+                HorizontalOptions="Center">
 
-            <DatePicker
-                x:Name="FechaClasePicker"
-                Date="{Binding FechaClase, Mode=TwoWay}" />
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
 
-            <Button
-                Text="AGREGAR CLASE"
-                Command="{Binding AgregarClaseCommand}" />
+                <VerticalStackLayout Spacing="14">
 
-            <Label
-                Text="Clases programadas"
-                FontSize="20"
-                FontAttributes="Bold" />
+                    <Label
+                        Text="Registrar nueva clase"
+                        FontSize="21"
+                        FontAttributes="Bold"
+                        TextColor="#193B68" />
 
-            <Label
-                x:Name="MensajeClasesVacias"
-                Text="No hay clases registradas en esta comisión."
-                IsVisible="{Binding MostrarClasesVacias}"
-                TextColor="Gray" />
+                    <Label
+                        Text="Comisión"
+                        FontSize="14"
+                        TextColor="#475569" />
 
-            <CollectionView
-                x:Name="ListaClases"
-                ItemsSource="{Binding ClasesVisibles}"
-                HeightRequest="300">
+                    <Picker
+                        x:Name="ComisionPicker"
+                        Title="Seleccione una comisión"
+                        ItemsSource="{Binding Comisiones}"
+                        SelectedItem="{Binding ComisionSeleccionada, Mode=TwoWay}"
+                        BackgroundColor="#F8FAFC"
+                        TextColor="#1E293B"
+                        TitleColor="#64748B" />
 
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <VerticalStackLayout Padding="10">
+                    <Label
+                        Text="Fecha de la clase"
+                        FontSize="14"
+                        TextColor="#475569" />
 
-                            <Label
-                                Text="{Binding Fecha, StringFormat='Fecha: {0:dd/MM/yyyy}'}"
-                                FontAttributes="Bold" />
+                    <DatePicker
+                        x:Name="FechaClasePicker"
+                        Date="{Binding FechaClase, Mode=TwoWay}"
+                        BackgroundColor="#F8FAFC"
+                        TextColor="#1E293B" />
 
-                            <Label
-                                Text="{Binding Comision}" />
+                    <!-- BOTON AGREGAR -->
+                    <Button
+                        Text="AGREGAR CLASE"
+                        Command="{Binding AgregarClaseCommand}"
+                        BackgroundColor="#16865D"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
+                        WidthRequest="220"
+                        HeightRequest="46"
+                        HorizontalOptions="Center"
+                        Margin="0,12,0,0" />
 
-                        </VerticalStackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
+                </VerticalStackLayout>
 
-            </CollectionView>
+            </Border>
+
+            <!-- LISTADO DE CLASES -->
+            <VerticalStackLayout
+                Spacing="12"
+                WidthRequest="650"
+                HorizontalOptions="Center">
+
+                <Label
+                    Text="Clases programadas"
+                    FontSize="22"
+                    FontAttributes="Bold"
+                    TextColor="#193B68"
+                    Margin="0,12,0,0"
+                    HorizontalTextAlignment="Center" />
+
+                <Label
+                    x:Name="MensajeClasesVacias"
+                    Text="No hay clases registradas en esta comisión."
+                    IsVisible="{Binding MostrarClasesVacias}"
+                    TextColor="#64748B"
+                    HorizontalTextAlignment="Center" />
+
+                <CollectionView
+                    x:Name="ListaClases"
+                    ItemsSource="{Binding ClasesVisibles}"
+                    HeightRequest="300">
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+
+                            <Border
+                                BackgroundColor="White"
+                                Stroke="#DEE6EF"
+                                StrokeThickness="1"
+                                Padding="15"
+                                Margin="0,0,0,10">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
+
+                                <VerticalStackLayout Spacing="7">
+
+                                    <Label
+                                        Text="{Binding Fecha, StringFormat='Fecha: {0:dd/MM/yyyy}'}"
+                                        FontAttributes="Bold"
+                                        FontSize="17"
+                                        TextColor="#193B68" />
+
+                                    <HorizontalStackLayout Spacing="6">
+
+                                        <Label
+                                            Text="Comisión:"
+                                            FontAttributes="Bold"
+                                            TextColor="#64748B" />
+
+                                        <Label
+                                            Text="{Binding Comision}"
+                                            TextColor="#334155" />
+
+                                    </HorizontalStackLayout>
+
+                                </VerticalStackLayout>
+
+                            </Border>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                </CollectionView>
+
+            </VerticalStackLayout>
 
         </VerticalStackLayout>
     </ScrollView>

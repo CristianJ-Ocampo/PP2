@@ -84,6 +84,9 @@
 	  <Compile Update="Views\HistorialestudiantePage.xaml.cs">
 	    <DependentUpon>HistorialestudiantePage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\ReporteRiesgoPage.xaml.cs">
+	    <DependentUpon>ReporteRiesgoPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\TrabajosPage.xaml.cs">
 	    <DependentUpon>TrabajosPage.xaml</DependentUpon>
 	  </Compile>
@@ -106,6 +109,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\HistorialestudiantePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\ReporteRiesgoPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\TrabajosPage.xaml">

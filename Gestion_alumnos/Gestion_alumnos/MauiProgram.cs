@@ -26,6 +26,7 @@ namespace Gestion_alumnos
             builder.Services.AddSingleton<BaseDatosService>();
             builder.Services.AddSingleton<DatosService>();
             builder.Services.AddSingleton<RiesgoService>();
+            builder.Services.AddSingleton<CargaDatosPruebaService>();
 
             // Pantallas de nuestro sistema
             builder.Services.AddTransient<MainPage>();
@@ -43,6 +44,8 @@ namespace Gestion_alumnos
             builder.Services.AddTransient<PanelViewModel>();
             builder.Services.AddTransient<AdministracionPage>();
             builder.Services.AddTransient<TrabajosPage>();
+            builder.Services.AddTransient<ReporteRiesgoPage>();
+            builder.Services.AddTransient<ReporteRiesgoViewModel>();
             return builder.Build();
         }
     }

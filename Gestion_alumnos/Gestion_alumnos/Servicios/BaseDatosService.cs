@@ -9,7 +9,7 @@ namespace Gestion_alumnos.Servicios
 
         public BaseDatosService()
         {
-            string rutaBaseDatos = Path.Combine(FileSystem.AppDataDirectory,"gestion_alumnos.db3");
+            string rutaBaseDatos = Path.Combine(FileSystem.AppDataDirectory, "gestion_alumnos_prueba.db3");
 
             System.Diagnostics.Debug.WriteLine($"RUTA DE LA BASE DE DATOS: {rutaBaseDatos}");
 
@@ -148,5 +148,37 @@ namespace Gestion_alumnos.Servicios
                 .ToListAsync();
         }
 
+
+
+        // CARGA MASIVA DE DATOS DE PRUEBA
+        public async Task CargarDatosPruebaAsync(
+            List<Estudiante> estudiantes,
+            List<Clase> clases,
+            List<TrabajoPractico> trabajos,
+            List<Asistencia> asistencias,
+            List<Entrega> entregas)
+        {
+            await InicializarAsync();
+
+            await conexion.RunInTransactionAsync(transaccion =>
+            {
+                // Evitar cargar dos veces sobre una base con datos.
+                if (transaccion.Table<Estudiante>().Count() > 0 ||
+                    transaccion.Table<Clase>().Count() > 0 ||
+                    transaccion.Table<TrabajoPractico>().Count() > 0 ||
+                    transaccion.Table<Asistencia>().Count() > 0 ||
+                    transaccion.Table<Entrega>().Count() > 0)
+                {
+                    throw new InvalidOperationException(
+                        "La base de prueba ya contiene datos académicos.");
+                }
+
+                transaccion.InsertAll(estudiantes);
+                transaccion.InsertAll(clases);
+                transaccion.InsertAll(trabajos);
+                transaccion.InsertAll(asistencias);
+                transaccion.InsertAll(entregas);
+            });
+        }
     }
 }

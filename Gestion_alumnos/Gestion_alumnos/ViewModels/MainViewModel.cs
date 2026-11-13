@@ -11,6 +11,8 @@ namespace Gestion_alumnos.ViewModels
     public class MainViewModel : INotifyPropertyChanged
     {
         private readonly DatosService datosService;
+
+        public IReadOnlyList<string> Comisiones => ComisionesService.Todas;
         public ObservableCollection<Estudiante> Estudiantes { get; }
 
         public ObservableCollection<Estudiante> EstudiantesVisibles { get; }
@@ -133,8 +135,7 @@ namespace Gestion_alumnos.ViewModels
                 return;
             }
 
-            if (!int.TryParse(Legajo, out int numeroLegajo)
-                || numeroLegajo <= 0)
+            if (!int.TryParse(Legajo, out int numeroLegajo) || numeroLegajo <= 0)
             {
                 await MostrarError("Error","El legajo debe ser un número positivo válido.");
                 return;
@@ -216,10 +217,9 @@ namespace Gestion_alumnos.ViewModels
                 EstudiantesVisibles.Add(estudiante);
             }
 
-            TotalTexto =
-                $"Total: {EstudiantesVisibles.Count} estudiantes";
+            TotalTexto = $"Total: {EstudiantesVisibles.Count} estudiantes";
 
-            MostrarMensajeVacio =
+                MostrarMensajeVacio =
                 EstudiantesVisibles.Count == 0;
         }
     }

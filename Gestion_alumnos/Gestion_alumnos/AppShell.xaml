@@ -39,6 +39,11 @@
             Route="PanelPage" />
 
         <ShellContent
+            x:Name="ReporteRiesgoTab"
+            Title="Reporte de riesgo"
+            Route="ReporteRiesgoPage" />
+
+        <ShellContent
             x:Name="AdministracionTab"
             Title="Administración"
             Route="AdministracionPage" />

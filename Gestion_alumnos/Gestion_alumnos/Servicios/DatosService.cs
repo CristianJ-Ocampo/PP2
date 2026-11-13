@@ -7,6 +7,8 @@ namespace Gestion_alumnos.Servicios
     {
         private readonly BaseDatosService baseDatosService;
 
+        public bool HayEstudiantes => Estudiantes.Count > 0;
+
         // COLECCIONES
         public ObservableCollection<Estudiante> Estudiantes { get; }
             = new();
@@ -23,7 +25,7 @@ namespace Gestion_alumnos.Servicios
         public ObservableCollection<Entrega> Entregas { get; }
             = new();
         public ObservableCollection<Intervencion> Intervenciones { get; }
-    = new();
+            = new();
         // CONFIGURACIÓN DE RIESGO
         public ConfiguracionRiesgo ConfiguracionRiesgo { get; private set; }
             = new ConfiguracionRiesgo();
@@ -199,6 +201,26 @@ namespace Gestion_alumnos.Servicios
 
             // ACTUALIZAR LA CONFIGURACIÓN EN MEMORIA
             ConfiguracionRiesgo = nuevaConfiguracion;
+        }
+
+        // CARGAR DATOS FICTICIOS EN SQLITE
+        public async Task CargarDatosPruebaAsync(
+            List<Estudiante> estudiantes,
+            List<Clase> clases,
+            List<TrabajoPractico> trabajos,
+            List<Asistencia> asistencias,
+            List<Entrega> entregas)
+        {
+            // GUARDAR TODOS LOS REGISTROS EN UNA TRANSACCIÓN
+            await baseDatosService.CargarDatosPruebaAsync(
+                estudiantes,
+                clases,
+                trabajos,
+                asistencias,
+                entregas);
+
+            // ACTUALIZAR LAS COLECCIONES DE LA APLICACIÓN
+            await CargarDatosAsync();
         }
     }
 }

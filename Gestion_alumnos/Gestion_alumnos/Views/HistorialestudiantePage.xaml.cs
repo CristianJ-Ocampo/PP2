@@ -145,11 +145,42 @@ namespace Gestion_alumnos
                     $"Riesgo total: {riesgo.PorcentajeRiesgo:F1}%\n" +
                     $"Inasistencias: {riesgo.PorcentajeInasistencias:F1}%\n" +
                     $"Trabajos no entregados: {riesgo.PorcentajeNoEntregas:F1}%";
+
+                // COLOR SEGÚN NIVEL DE RIESGO
+                switch (riesgo.NivelRiesgo?.ToString().Trim().ToLowerInvariant())
+                {
+                    case "bajo":
+                        RiesgoBorder.BackgroundColor = Color.FromArgb("#DCFCE7");
+                        RiesgoBorder.Stroke = Color.FromArgb("#86EFAC");
+                        RiesgoEstudianteLabel.TextColor = Color.FromArgb("#166534");
+                        break;
+
+                    case "medio":
+                        RiesgoBorder.BackgroundColor = Color.FromArgb("#FEF3C7");
+                        RiesgoBorder.Stroke = Color.FromArgb("#FCD34D");
+                        RiesgoEstudianteLabel.TextColor = Color.FromArgb("#92400E");
+                        break;
+
+                    case "alto":
+                        RiesgoBorder.BackgroundColor = Color.FromArgb("#FEE2E2");
+                        RiesgoBorder.Stroke = Color.FromArgb("#FCA5A5");
+                        RiesgoEstudianteLabel.TextColor = Color.FromArgb("#991B1B");
+                        break;
+
+                    default:
+                        RiesgoBorder.BackgroundColor = Color.FromArgb("#EEF3F9");
+                        RiesgoBorder.Stroke = Color.FromArgb("#DEE6EF");
+                        RiesgoEstudianteLabel.TextColor = Color.FromArgb("#334155");
+                        break;
+                }
             }
             else
             {
-                RiesgoEstudianteLabel.Text =
-                    "Sin información de riesgo.";
+                RiesgoEstudianteLabel.Text = "Sin información de riesgo.";
+
+                RiesgoBorder.BackgroundColor = Color.FromArgb("#EEF3F9");
+                RiesgoBorder.Stroke = Color.FromArgb("#DEE6EF");
+                RiesgoEstudianteLabel.TextColor = Color.FromArgb("#334155");
             }
         }
 

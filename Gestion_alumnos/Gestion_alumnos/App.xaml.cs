@@ -1,5 +1,4 @@
-﻿
-using Gestion_alumnos.Servicios;
+﻿using Gestion_alumnos.Servicios;
 
 namespace Gestion_alumnos
 {
@@ -14,6 +13,7 @@ namespace Gestion_alumnos
 
             this.appShell = appShell;
             this.datosService = datosService;
+           
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
@@ -24,7 +24,9 @@ namespace Gestion_alumnos
             {
                 try
                 {
+                    // CARGAR LOS DATOS EXISTENTES
                     await datosService.CargarDatosAsync();
+                    
                 }
                 catch (Exception ex)
                 {
